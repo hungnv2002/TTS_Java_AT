@@ -17,13 +17,12 @@ public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false, unique = true)
+    private String teacherCode;
 
     @Column(nullable = false)
     private String name;
-    private String address;
-    @Column(nullable = false, unique = true)
-    private String email;
-    private int age;
+
 
     public int getId() {
         return id;
@@ -41,28 +40,5 @@ public class Teacher {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
 }
 

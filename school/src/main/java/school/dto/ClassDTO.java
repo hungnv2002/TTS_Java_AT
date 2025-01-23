@@ -15,7 +15,7 @@ public class ClassDTO {
     private int id;
     private String code;
     private String name;
-    private TeacherDTO teacher;
+    private TeacherDTO teacherCode;
     private List<StudentDTO> students;
 
     public int getId() {
@@ -43,11 +43,11 @@ public class ClassDTO {
     }
 
     public TeacherDTO getTeacher() {
-        return teacher;
+        return teacherCode;
     }
 
     public void setTeacher(TeacherDTO teacher) {
-        this.teacher = teacher;
+        this.teacherCode = teacher;
     }
 
     public List<StudentDTO> getStudents() {

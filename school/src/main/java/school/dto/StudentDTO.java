@@ -12,11 +12,16 @@ public class StudentDTO {
 
     private int id;
     private String name;
-    private String address;
-    private String email;
-    private int age;
-    private double score;
+    private String studentCode;
     private int classId;
+
+    public String getStudentCode() {
+        return studentCode;
+    }
+
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
+    }
 
     public int getId() {
         return id;
@@ -34,37 +39,6 @@ public class StudentDTO {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public double getScore() {
-        return score;
-    }
-
-    public void setScore(double score) {
-        this.score = score;
-    }
 
     public int getClassId() {
         return classId;

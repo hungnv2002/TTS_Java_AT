@@ -19,7 +19,7 @@ public class ClassEntity {
     private int id;
 
     @Column(nullable = false, unique = true)
-    private String code;
+    private String classCode;
 
     @Column(nullable = false)
     private String name;
@@ -39,12 +39,12 @@ public class ClassEntity {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getClassCode() {
+        return classCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
     }
 
     public String getName() {
@@ -69,6 +69,9 @@ public class ClassEntity {
 
     public void setStudents(List<Student> students) {
         this.students = students;
+    }
+
+    public void setTeacherId(int teacherId) {
     }
 }
 

@@ -9,6 +9,5 @@ import school.entity.Teacher;
 import java.util.Optional;
 
 public interface ClassRepo extends JpaRepository<ClassEntity, Integer> {
-    Page<ClassEntity> findByNameContainingOrCodeContaining(String name, String code, Pageable pageable);
-    Page<ClassEntity> findAll(Pageable pageable);
+
 }

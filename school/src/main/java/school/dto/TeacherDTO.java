@@ -9,10 +9,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TeacherDTO {
     private int id;
+    private String teacherCode;
     private String name;
-    private String address;
-    private String email;
-    private int age;
+
+    public String getTeacherCode() {
+        return teacherCode;
+    }
+
+    public void setTeacherCode(String teacherCode) {
+        this.teacherCode = teacherCode;
+    }
 
     public int getId() {
         return id;
@@ -30,27 +36,4 @@ public class TeacherDTO {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
 }

@@ -1,19 +1,19 @@
 package school.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import school.dto.ClassDTO;
 import school.dto.StudentDTO;
-import school.service.StudentService;
+import school.service.impl.StudentServiceImpl;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("student")
 public class StudentController {
     @Autowired
-    StudentService studentService;
+    StudentServiceImpl studentService;
     @PostMapping("/")
     public ResponseEntity<StudentDTO> addStudent(@RequestBody StudentDTO studentDTO){
         StudentDTO addedStudent=studentService.addStudent(studentDTO);
@@ -21,7 +21,7 @@ public class StudentController {
     }
     @DeleteMapping("/")
     public ResponseEntity<String>deleteStudent(int studentId){
-        studentService.deleleStudent(studentId);
+        studentService.deleteStudent(studentId);
         return ResponseEntity.ok("delete succesful");
     }
     @PutMapping("/{studentId}")
@@ -34,7 +34,7 @@ public class StudentController {
         }
     }
     @GetMapping("/students")
-    public Page<StudentDTO> getStudent(
+    public List<StudentDTO> getStudent(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -42,7 +42,7 @@ public class StudentController {
         return studentService.searchStudent(name, page, size);
     }
     @GetMapping
-    public Page<StudentDTO> getStudents(@RequestParam(defaultValue = "0") int page,
+    public List<StudentDTO> getStudents(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "10") int size) {
         return studentService.getAllStudents(page, size);
     }

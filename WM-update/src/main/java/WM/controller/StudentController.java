@@ -19,7 +19,7 @@
 //        return new  ResponseEntity<>(studentDTO, HttpStatus.CREATED);
 //    }
 //    @DeleteMapping("/")
-//    public ResponseEntity<String>deleteStudent(int studentId){
+////    public ResponseEntity<String>deleteStudent(int studentId){
 //        studentService.deleteStudent(studentId);
 //        return ResponseEntity.ok("delete succesful");
 //    }

@@ -1,8 +1,9 @@
-//package WM.repository;
-//
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import school.entity.ClassEntity;
-//
-//public interface ClassRepo extends JpaRepository<ClassEntity, Integer> {
-//
-//}
+package WM.repository;
+
+import WM.entity.ClassEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+public interface ClassRepo extends JpaRepository<ClassEntity, Integer> {
+
+}

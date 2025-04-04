@@ -14,6 +14,13 @@ public class Constain {
         String TEACHER_CODE_EXSIST="Ma giao vien da ton tai";
         String LIST_ERRORS="Danh sach loi";
     }
+    public interface USER{
+        String USER_NAME_BLANK="Ten nguoi dung khong duoc bo trong";
+        String USER_USERNAME_BLANK="Ten dang nhap khong duoc de trong";
+        String USER_USERNAME_EXSIST="Ten dang nhap da ton tai";
+        String USER_PASSWORD_BLANK="Mat khau khong duoc de trong";
+        String LIST_ERRORS="Danh sach loi";
+    }
     public interface ERRORCODE {
         String INTERNAL_SERVER_ERROR = "500";
         String INTERNAL_SERVER_ERROR_MESSAGE = "INTERNAL_SERVER_ERROR";

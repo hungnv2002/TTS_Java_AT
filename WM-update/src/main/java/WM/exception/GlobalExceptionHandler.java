@@ -21,11 +21,11 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(AuthorizeException.class)
     public ResponseEntity<String> handleUnauthorizedException(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + ex.getMessage());
     }
-    @ExceptionHandler(SecurityException.class)
+    @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<String> handleForbiddenException(SecurityException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: " + ex.getMessage());
     }

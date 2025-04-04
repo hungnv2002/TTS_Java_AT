@@ -2,19 +2,17 @@ package WM.service.impl;
 
 import WM.dto.TeacherCommon;
 import WM.dto.TeacherDTO;
-import WM.dto.request.CreateTeacherInforRequestBody;
-import WM.dto.request.PostCreateTeacherInfoByFileRequest;
-import WM.dto.request.PostCreateTeacherInfoRequestBody;
+import WM.dto.request.*;
 import WM.dto.response.CreateTeacherInforRespone;
 import WM.dto.response.PostCreateClassInfoByFileResponse;
 import WM.dto.response.PostCreateTeacherInfoResponse;
+import WM.dto.response.UpdateTeacherInforResponseBody;
 import WM.exception.BadRequestException;
 import WM.exception.VmException;
 import WM.service.TeacherService;
 import WM.util.Constain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 
 import org.apache.poi.ss.usermodel.*;
@@ -49,20 +47,15 @@ public class TeacherServiceImpl implements TeacherService {
         this.modelMapper = modelMapper;
         this.namedParameterJdbcTemplate=namedParameterJdbcTemplate;
     }
-
     @Transactional
     @Override
-    public CreateTeacherInforRespone postCreateTeacherInfo(@Valid CreateTeacherInforRequestBody requestBody, HttpServletRequest httpServletRequest) throws BadRequestException {
-        try {
-            validateTeacherInfoFromRequestBody(requestBody);
-        } catch (VmException e) {
-            throw new RuntimeException(e);
-        }
+    public CreateTeacherInforRespone postCreateTeacherInfo( CreateTeacherInforRequestBody requestBody, HttpServletRequest httpServletRequest) throws BadRequestException {
         Integer countCode = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM teacher WHERE teacher_code = ?", Integer.class, requestBody.getTeacherCode());
         if (countCode != null && countCode > 0) {
-            throw new BadRequestException(Constain.TEACHER.TEACHER_CODE_EXSIST);
+            throw new BadRequestException(HttpStatus.BAD_REQUEST.value(), Constain.TEACHER.TEACHER_CODE_EXSIST);
         }
+            validateTeacherInfoFromRequestBody(requestBody);
         String sql = "INSERT INTO teacher (teacher_Code, name) VALUES (?,?)";
         jdbcTemplate.update(sql, requestBody.getTeacherCode(), requestBody.getName());
         return modelMapper.map(requestBody, CreateTeacherInforRespone.class);
@@ -81,7 +74,6 @@ public class TeacherServiceImpl implements TeacherService {
         int totalTeachers = jdbcTemplate.queryForObject(countSql, Integer.class);
         return new PageImpl<>(teachers, pageable, totalTeachers);
     }
-
     @Override
     public PostCreateClassInfoByFileResponse importTeachersFromExcel(PostCreateTeacherInfoByFileRequest request, HttpServletRequest httpServletRequest) throws IOException, VmException {
         List<String> errorMessages = new ArrayList<>();
@@ -111,13 +103,11 @@ public class TeacherServiceImpl implements TeacherService {
                 continue;
             }
 
-
             teacherCodesFromFile.add(teacherCode);
 
             validTeachers.add(new TeacherCommon(teacherCode, name));
         }
         workbook.close();
-
         if (!validTeachers.isEmpty()) {
             String sql = "SELECT teacher_code FROM teacher WHERE teacher_code IN (:codes)";
             Map<String, Object> params = Map.of("codes", teacherCodesFromFile);
@@ -142,30 +132,52 @@ public class TeacherServiceImpl implements TeacherService {
                 );
             }
         }
-
         PostCreateClassInfoByFileResponse response = new PostCreateClassInfoByFileResponse();
         response.setErrorMessages(errorMessages);
         response.setSuccessCount(validTeachers.size());
         return response;
     }
+    @Transactional
+    @Override
+    public UpdateTeacherInforResponseBody updateTeacherInfor(UpdateTeacherInforRequestBody requestBody) {
+        Integer countCode = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM teacher WHERE id = ?", Integer.class, requestBody.getId());
+
+        if (countCode == null || countCode <= 0) {
+            throw new BadRequestException(HttpStatus.BAD_REQUEST.value(), Constain.TEACHER.TEACHER_NOTFOUND);
+        }
+        String sql = "UPDATE teacher SET name = ?, teacher_code = ? WHERE id = ?";
 
 
+        validateTeacherInfoFromRequestBody(requestBody);
 
-    private <T extends TeacherDTO>void validateTeacherInfoFromRequestBody(T request) throws VmException{
+        jdbcTemplate.update(sql, requestBody.getName(), requestBody.getTeacherCode(), requestBody.getId());
+
+        return modelMapper.map(requestBody, UpdateTeacherInforResponseBody.class);
+    }
+    private <T extends TeacherDTO>void validateTeacherInfoFromRequestBody(T request) throws BadRequestException{
         if (StringUtils.isBlank(request.getTeacherCode())){
-            throw new BadRequestException(Constain.TEACHER.TEACHER_CODE_BLANK);
+            throw new BadRequestException(HttpStatus.BAD_REQUEST.value(), Constain.TEACHER.TEACHER_CODE_BLANK);
         }
         if (StringUtils.isBlank(request.getName())){
-            throw new BadRequestException( Constain.TEACHER.TEACHER_NAME_BLANK);
+            throw new BadRequestException(HttpStatus.BAD_REQUEST.value(), Constain.TEACHER.TEACHER_NAME_BLANK);
         }
     }
 
-
+    @Override
     @Transactional
-    public void deleteTeacher(int teacherId) {
+    public void deleteTeacher(DeleteTeacherInfoRequestBody requestBody) {
+        Integer countCode = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM teacher WHERE id = ?", Integer.class, requestBody.getId());
+
+        if (countCode == null || countCode <= 0) {
+            throw new BadRequestException(HttpStatus.BAD_REQUEST.value(), Constain.TEACHER.TEACHER_NOTFOUND);
+        }
+
         String sql = "DELETE FROM teacher WHERE id = ?";
-        jdbcTemplate.update(sql, teacherId);
+        jdbcTemplate.update(sql, requestBody.getId());
     }
+
     private static class TeacherRowMapper implements RowMapper<PostCreateTeacherInfoResponse> {
         @Override
         public PostCreateTeacherInfoResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
